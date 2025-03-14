@@ -8,17 +8,23 @@
 
 import SwiftUI
 
+/// A view component that displays the calculated amount of water needed
+/// Based on the input coffee amount and desired ratio
 struct WaterDisplay: View {
-    @Binding var waterRatio: String
-    @Binding var coffee: String
-
+    // Two-way bindings to the input values
+    @Binding var waterRatio: String    // The desired water-to-coffee ratio
+    @Binding var coffee: String        // The amount of coffee in grams
 
     var body: some View {
+        // Vertical stack to arrange the display elements
         VStack {
+            // Descriptive label
             Text("You need")
                 .fixedSize()
                 .font(.system(size: 24))
 
+            // Calculated water amount display
+            // Uses CalculatorViewModel to compute the required water amount
             Text(
                 String(
                     CalculatorViewModel.calculateGramsOfWaterTimes(
@@ -30,11 +36,10 @@ struct WaterDisplay: View {
                 .fixedSize()
                 .font(.system(size: 72))
 
-
+            // Unit label
             Text("grams of water")
                 .fixedSize()
                 .font(.system(size: 24))
         }
     }
-
 }

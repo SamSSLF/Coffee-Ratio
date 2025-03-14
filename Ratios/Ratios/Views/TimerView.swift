@@ -9,28 +9,36 @@
 import SwiftUI
 import Combine
 
+/// Enum to track the current state of the timer
+/// Used to toggle between running and paused states
 private enum TimerState {
     case running
     case paused
 }
 
+/// A view component that provides a timer functionality for brewing
+/// Includes start/pause and reset controls, and displays time in MM:SS format
 struct TimerView: View {
+    // State variables to manage the timer's UI and functionality
+    @State var buttonText: String = "Start"          // Text displayed on the main control button
+    @State var timerText: String = "00:00"          // Displayed time in MM:SS format
+    @State private var timerState: TimerState = .paused  // Current state of the timer
+    @State private var secondsPassed = 0             // Total seconds elapsed
 
-    @State var buttonText: String = "Start"
-    @State var timerText: String = "00:00"
-    @State private var timerState: TimerState = .paused
-    @State private var secondsPassed = 0
-
+    // View model that handles the timer logic
     private let viewModel = TimerViewModel()
 
     var body: some View {
         VStack {
+            // Timer display showing elapsed time
             Text(timerText)
                 .font(.system(size: 64))
                 .frame(width: CGFloat(300), height: CGFloat(52))
+                // Updates the display every time the timer fires
                 .onReceive(viewModel.timer) { date in
                     self.secondsPassed += 1
 
+                    // Format the time as MM:SS
                     let hours = String(format: "%02d", self.secondsPassed / 60)
                     let minutes = String(format :"%02d", self.secondsPassed % 60)
                     self.timerText = "\(hours):\(minutes)"
@@ -39,6 +47,7 @@ struct TimerView: View {
             Spacer()
                 .frame(height: 20)
 
+            // Start/Pause button with custom styling
             Button(action: handleButtonPress) {
                 Text(buttonText)
                     .font(.system(size: 20))
@@ -52,6 +61,7 @@ struct TimerView: View {
             Spacer()
                 .frame(height: 12)
 
+            // Reset button that returns timer to initial state
             Button(action: {
                 self.timerState = .paused
                 self.viewModel.stop()
@@ -67,6 +77,8 @@ struct TimerView: View {
         }
     }
 
+    /// Handles the start/pause button press
+    /// Toggles between running and paused states
     func handleButtonPress() {
         switch timerState {
         case .running:
