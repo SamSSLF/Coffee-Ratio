@@ -23,6 +23,6 @@ class TimerViewModel {
         }
 
         cTimer.cancel()
-        timer = Timer.publish(every: 1, on: .current, in: .common)
+        cancellableTimer = nil
     }
 }
